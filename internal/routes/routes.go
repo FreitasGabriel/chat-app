@@ -1,11 +1,14 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-func Init(c *gin.RouterGroup) {
-	c.GET("/heakth", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	"github.com/FreitasGabriel/chat-app/internal/handler"
+	"github.com/gin-gonic/gin"
+)
+
+func Init(c *gin.RouterGroup, handlerBroadcast *handler.WebsocketBroadcast) {
+	c.GET("/health", handler.Health)
+	c.GET("ws", handlerBroadcast.HandleWebsocketConnection)
+	c.StaticFS("/chat/", http.Dir("../../templates/index.html"))
 }
