@@ -5,9 +5,9 @@ import (
 	database "github.com/FreitasGabriel/chat-app/config/database/postgres"
 	config "github.com/FreitasGabriel/chat-app/config/dependencies"
 	"github.com/FreitasGabriel/chat-app/config/logger"
-	"github.com/FreitasGabriel/chat-app/internal/infra/webserver/handler"
+	"github.com/FreitasGabriel/chat-app/internal/infra/handler"
+	"github.com/FreitasGabriel/chat-app/internal/infra/service"
 	"github.com/FreitasGabriel/chat-app/internal/routes"
-	"github.com/FreitasGabriel/chat-app/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
