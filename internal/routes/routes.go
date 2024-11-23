@@ -1,14 +1,12 @@
 package routes
 
 import (
-	"net/http"
-
-	"github.com/FreitasGabriel/chat-app/internal/handler"
+	"github.com/FreitasGabriel/chat-app/internal/infra/webserver/handler"
 	"github.com/gin-gonic/gin"
 )
 
-func Init(c *gin.RouterGroup, handlerBroadcast *handler.WebsocketBroadcast) {
+func InitRoutes(c *gin.RouterGroup, broadCastHandler *handler.WebsocketBroadcast, userHandler *handler.UserHandlerinterface) {
 	c.GET("/health", handler.Health)
-	c.GET("ws", handlerBroadcast.HandleWebsocketConnection)
-	c.StaticFS("/chat/", http.Dir("../../templates/index.html"))
+	c.GET("/ws", broadCastHandler.HandleWebsocketConnection)
+	c.POST("/user", userHandler.CreateUserHandler)
 }

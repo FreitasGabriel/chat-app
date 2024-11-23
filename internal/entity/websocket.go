@@ -1,13 +1,13 @@
 package entity
 
-import "github.com/gorilla/websocket"
+import (
+	"net/http"
 
-type Message struct {
-	Username string `json:"username"`
-	Message  string `json:"message"`
-}
+	"github.com/gorilla/websocket"
+)
 
 var Upgrader = websocket.Upgrader{
+	CheckOrigin:     func(r *http.Request) bool { return true },
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
