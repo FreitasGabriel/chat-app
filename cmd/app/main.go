@@ -32,6 +32,14 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	c := gin.Default()
+	c.Use(gin.Recovery())
+
+	c.Use(func(c *gin.Context) {
+		c.Set("jwt_secret", conf.JWTSecret)
+		c.Set("jwt_expires_in", conf.JWTExpiresIn)
+		c.Next()
+	})
+
 	routes.InitRoutes(&c.RouterGroup, websocketBroadcast, userHandler)
 
 	go service.WriteMessageOnWebsocket(websocketBroadcast.Broadcast, websocketBroadcast.Clients)
