@@ -9,5 +9,6 @@ func InitRoutes(c *gin.RouterGroup, broadCastHandler *handler.WebsocketBroadcast
 	c.GET("/health", handler.Health)
 	c.GET("/ws", broadCastHandler.HandleWebsocketConnection)
 	c.POST("/user", userHandler.CreateUser)
+	c.PUT("/user/password", userHandler.ChangePassword)
 	c.GET("/user", userHandler.FindByEmail)
 }

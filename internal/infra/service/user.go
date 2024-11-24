@@ -20,3 +20,11 @@ func (us *userService) FindByEmail(email string) (*entity.User, error) {
 	}
 	return user, nil
 }
+
+func (us *userService) ChangePassword(email, oldPassword, newPassword string) error {
+	err := us.repo.ChangePassword(email, oldPassword, newPassword)
+	if err != nil {
+		return err
+	}
+	return nil
+}

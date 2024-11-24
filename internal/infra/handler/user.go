@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/FreitasGabriel/chat-app/config/logger"
+	"github.com/FreitasGabriel/chat-app/internal/dto"
 	"github.com/FreitasGabriel/chat-app/internal/entity"
 	"github.com/gin-gonic/gin"
 )
@@ -14,13 +15,24 @@ func (us *userHandler) CreateUser(c *gin.Context) {
 	err := c.BindJSON(&user)
 	if err != nil {
 		logger.Error("error to bind json", err)
+		c.JSON(500, "error to to bind json")
 		return
 	}
 
 	entityUser := entity.NewUser(user.Name, user.Email, user.Username, user.Password)
+	err = us.service.CreateUser(entityUser)
+	if err != nil {
+		c.JSON(500, "error to create user")
+		return
+	}
 
-	us.service.CreateUser(entityUser)
-	c.JSON(200, entityUser)
+	outputUser := dto.CreateUserOutput{
+		Name:     entityUser.Name,
+		Email:    entityUser.Email,
+		Username: entityUser.Username,
+	}
+
+	c.JSON(200, outputUser)
 }
 
 func (us *userHandler) FindByEmail(c *gin.Context) {
@@ -43,4 +55,25 @@ func (us *userHandler) FindByEmail(c *gin.Context) {
 	}
 
 	c.JSON(200, result)
+}
+
+func (uh *userHandler) ChangePassword(c *gin.Context) {
+	var user dto.ChangePasswordDTO
+
+	err := c.Bind(&user)
+	if err != nil {
+		logger.Error("error to bind json", err)
+		c.JSON(201, "error to bind json")
+		return
+	}
+
+	err = uh.service.ChangePassword(user.Email, user.OldPassword, user.NewPassword)
+	if err != nil {
+		logger.Error("error to change password", err)
+		c.JSON(201, "error to change password")
+		return
+	}
+
+	logger.Info("Password changed successfully")
+	c.JSON(200, "Password changed successfully")
 }

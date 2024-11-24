@@ -32,4 +32,5 @@ type userHandler struct {
 type IUserHandler interface {
 	CreateUser(c *gin.Context)
 	FindByEmail(c *gin.Context)
+	ChangePassword(c *gin.Context)
 }

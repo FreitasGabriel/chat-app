@@ -18,4 +18,5 @@ type userService struct {
 type IUserService interface {
 	CreateUser(user *entity.User) error
 	FindByEmail(email string) (*entity.User, error)
+	ChangePassword(email, oldPassword, newPassword string) error
 }
