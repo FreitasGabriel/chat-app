@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/FreitasGabriel/chat-app/config/logger"
 	"github.com/FreitasGabriel/chat-app/internal/dto"
@@ -76,4 +77,40 @@ func (uh *userHandler) ChangePassword(c *gin.Context) {
 
 	logger.Info("Password changed successfully")
 	c.JSON(200, "Password changed successfully")
+}
+
+func (uh *userHandler) UserLogin(c *gin.Context) {
+	jwtsecret := c.Value("jwt_secret").(string)
+	jwtespiresin := c.Value("jwt_expires_in").(int)
+
+	var user dto.UserLogin
+	err := c.ShouldBind(&user)
+	if err != nil {
+		logger.Error("error to bind body data", err)
+		c.JSON(500, "error to bind body data")
+		return
+	}
+
+	foundUser, err := uh.service.FindByEmail(user.Email)
+	if err != nil {
+		logger.Error("error to find user", err)
+		c.JSON(500, "error to find user")
+		return
+	}
+
+	passwordChecked, err := foundUser.ValidatePassword(user.Password)
+
+	if !passwordChecked {
+		logger.Error("password mismatched", err)
+		c.JSON(http.StatusUnauthorized, "password mismatched")
+		return
+	}
+
+	token, err := uh.service.CreateJWTToken(user.Email, user.Password, jwtespiresin, jwtsecret)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid jwt token")
+		return
+	}
+
+	c.JSON(201, token)
 }

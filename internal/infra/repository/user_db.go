@@ -39,7 +39,9 @@ func (r *userRepository) ChangePassword(email, oldPassword, newPassword string) 
 		return err
 	}
 
-	result := r.db.Model(&user).Update("password", newPassword)
+	hashedPassword, _ := entity.GenerateHashedPassword(newPassword)
+
+	result := r.db.Model(&user).Update("password", hashedPassword)
 	if result.Error != nil {
 		logger.Error("error to change password", result.Error)
 		return result.Error
