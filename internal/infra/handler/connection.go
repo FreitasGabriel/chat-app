@@ -3,7 +3,7 @@ package handler
 import (
 	"github.com/FreitasGabriel/chat-app/config/logger"
 	"github.com/FreitasGabriel/chat-app/internal/entity"
-	"github.com/FreitasGabriel/chat-app/internal/service"
+	"github.com/FreitasGabriel/chat-app/internal/infra/service"
 	"github.com/gin-gonic/gin"
 )
 
