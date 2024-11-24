@@ -24,6 +24,8 @@ func NewDatabaseConnection(config *configs.Conf) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	logger.Info("Database connected")
+
 	return db, nil
 }
 
