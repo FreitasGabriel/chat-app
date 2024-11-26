@@ -15,6 +15,7 @@ type Conf struct {
 	WebServerPort string `mapstructure:"WEB_SERVER_PORT"`
 	JWTSecret     string `mapstructure:"JWT_SECRET"`
 	JWTExpiresIn  int    `mapstructure:"JWT_EXPIRESIN"`
+	CypherKey     string `mapstructure:"CYPHER_KEY"`
 	TokenAuthKey  *jwtauth.JWTAuth
 }
 

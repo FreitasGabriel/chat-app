@@ -37,14 +37,15 @@ func main() {
 	c.Use(func(c *gin.Context) {
 		c.Set("jwt_secret", conf.JWTSecret)
 		c.Set("jwt_expires_in", conf.JWTExpiresIn)
+		c.Set("cypher_key", conf.CypherKey)
 		c.Next()
 	})
 
 	routes.InitRoutes(&c.RouterGroup, websocketBroadcast, userHandler)
 
-	go service.WriteMessageOnWebsocket(websocketBroadcast.Broadcast, websocketBroadcast.Clients)
+	go service.WriteMessageOnWebsocket(websocketBroadcast.Broadcast, websocketBroadcast.Clients, []byte(conf.CypherKey))
 
-	if err := c.Run(":8000"); err != nil {
+	if err := c.Run(":3000"); err != nil {
 		logger.Error("Error to start server", err)
 	}
 }
