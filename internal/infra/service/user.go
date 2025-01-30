@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/FreitasGabriel/chat-app/internal/dto"
 	"github.com/FreitasGabriel/chat-app/internal/entity"
 )
 
@@ -13,12 +14,12 @@ func (us *userService) CreateUser(user *entity.User) error {
 	return nil
 }
 
-func (us *userService) FindByEmail(email string) (*entity.User, error) {
-	user, err := us.repo.FindByEmail(email)
+func (us *userService) FindByEmail(email string) (*entity.User, *dto.FindUserOutput, error) {
+	user, userDTO, err := us.repo.FindByEmail(email)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return user, nil
+	return user, userDTO, nil
 }
 
 func (us *userService) ChangePassword(email, oldPassword, newPassword string) error {

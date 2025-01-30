@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/FreitasGabriel/chat-app/internal/dto"
 	"github.com/FreitasGabriel/chat-app/internal/entity"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,6 @@ type userRepository struct {
 
 type IUserRepository interface {
 	CreateUser(user *entity.User) error
-	FindByEmail(email string) (*entity.User, error)
+	FindByEmail(email string) (*entity.User, *dto.FindUserOutput, error)
 	ChangePassword(email, oldPassword, newPassword string) error
 }

@@ -12,5 +12,5 @@ func InitRoutes(c *gin.RouterGroup, broadCastHandler *handler.WebsocketBroadcast
 	c.POST("/user", userHandler.CreateUser)
 	c.POST("/user/login", userHandler.UserLogin)
 	c.PUT("/user/password", service.ValidateJWTToken, userHandler.ChangePassword)
-	c.GET("/user", userHandler.FindByEmail)
+	c.GET("/user", service.ValidateJWTToken, userHandler.FindByEmail)
 }

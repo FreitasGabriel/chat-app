@@ -45,7 +45,7 @@ func main() {
 
 	go service.WriteMessageOnWebsocket(websocketBroadcast.Broadcast, websocketBroadcast.Clients, []byte(conf.CypherKey))
 
-	if err := c.Run(":3000"); err != nil {
+	if err := c.Run(":8000"); err != nil {
 		logger.Error("Error to start server", err)
 	}
 }

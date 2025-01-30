@@ -48,7 +48,7 @@ func (us *userHandler) FindByEmail(c *gin.Context) {
 
 	logger.Info(fmt.Sprintf("email: %s", email))
 
-	result, err := us.service.FindByEmail(email)
+	_, result, err := us.service.FindByEmail(email)
 	if err != nil {
 		logger.Error("user not found", err)
 		c.JSON(201, "user not found")
@@ -91,7 +91,7 @@ func (uh *userHandler) UserLogin(c *gin.Context) {
 		return
 	}
 
-	foundUser, err := uh.service.FindByEmail(user.Email)
+	foundUser, _, err := uh.service.FindByEmail(user.Email)
 	if err != nil {
 		logger.Error("error to find user", err)
 		c.JSON(500, "error to find user")

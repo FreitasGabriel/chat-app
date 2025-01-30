@@ -5,6 +5,8 @@ services:
     image: postgres
     restart: always
     hostname: postgres
+    volumes:
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     environment:
       - POSTGRES_PASSWORD=password!
       - POSTGRES_USER=postgres
