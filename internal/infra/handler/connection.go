@@ -14,6 +14,7 @@ func (wb *WebsocketBroadcast) HandleWebsocketConnection(c *gin.Context) {
 		logger.Error("Error to upgrade connection", err)
 		return
 	}
+
 	defer ws.Close()
 
 	wb.Clients[ws] = true

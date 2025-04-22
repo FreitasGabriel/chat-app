@@ -7,6 +7,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"time"
 
 	"github.com/FreitasGabriel/chat-app/config/logger"
 	"github.com/FreitasGabriel/chat-app/internal/entity"
@@ -20,6 +21,11 @@ func ReadMessageFromWebscoket(ws *websocket.Conn, broadcast chan entity.Message,
 			logger.Error("Error to read message", err)
 			return
 		}
+
+
+		message.ID = entity.NewUUID().String()
+		message.CreatedAt = time.Now()
+
 		encryptedMsg := EncryptMessageByAES(cypherKey, message.Message)
 		message.Message = encryptedMsg
 		fmt.Println("message", message)
