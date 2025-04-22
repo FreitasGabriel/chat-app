@@ -1,18 +1,27 @@
 package main
 
 import (
+	"time"
+
 	configs "github.com/FreitasGabriel/chat-app/config"
 	database "github.com/FreitasGabriel/chat-app/config/database/postgres"
 	config "github.com/FreitasGabriel/chat-app/config/dependencies"
 	"github.com/FreitasGabriel/chat-app/config/logger"
+	redisConfig "github.com/FreitasGabriel/chat-app/config/redis"
 	"github.com/FreitasGabriel/chat-app/internal/infra/handler"
 	"github.com/FreitasGabriel/chat-app/internal/infra/service"
 	"github.com/FreitasGabriel/chat-app/internal/routes"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 )
 
 func main() {
 	logger.Info("Starting server...")
+
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
+	rateLimit := redisConfig.NewRateLimiter(redisClient, 1*time.Minute, 5)
 
 	websocketBroadcast := handler.NewWebsocketBroadcast()
 
@@ -29,12 +38,14 @@ func main() {
 	}
 
 	userHandler := config.InitDependencies(gormDB)
+	rlHandler := handler.RateLimitMiddleware(rateLimit, nil)
 
 	gin.SetMode(gin.ReleaseMode)
 	c := gin.Default()
-	c.Use(gin.Recovery())
 
+	c.Use(rlHandler)
 	c.Use(func(c *gin.Context) {
+		gin.Recovery()
 		c.Set("jwt_secret", conf.JWTSecret)
 		c.Set("jwt_expires_in", conf.JWTExpiresIn)
 		c.Set("cypher_key", conf.CypherKey)
